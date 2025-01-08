@@ -2,7 +2,8 @@ package logic
 
 import (
 	"context"
-
+	"errors"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"zhihu/application/user/internal/svc"
 	"zhihu/application/user/service"
 
@@ -26,8 +27,12 @@ func NewFindByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FindById
 func (l *FindByIdLogic) FindById(in *service.FindByIdRequest) (*service.FindByIdResponse, error) {
 	user, err := l.svcCtx.UserModel.FindOne(l.ctx, in.UserId)
 	if err != nil {
-		logx.Errorf("FindOne user: %v error: %v", user, err)
-		return nil, err
+		if errors.Is(err, sqlx.ErrNotFound) {
+			return &service.FindByIdResponse{UserId: -1}, nil
+		} else {
+			logx.Errorf("FindOne id: %v error: %v", in.UserId, err)
+			return nil, err
+		}
 	}
 	return &service.FindByIdResponse{
 		UserId:   user.Id,

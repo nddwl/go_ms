@@ -2,7 +2,8 @@ package logic
 
 import (
 	"context"
-
+	"errors"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"zhihu/application/user/internal/svc"
 	"zhihu/application/user/service"
 
@@ -26,8 +27,12 @@ func NewFindByMobileLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Find
 func (l *FindByMobileLogic) FindByMobile(in *service.FindByMobileRequest) (*service.FindByMobileResponse, error) {
 	user, err := l.svcCtx.UserModel.FindOneByMobile(l.ctx, in.Mobile)
 	if err != nil {
-		logx.Errorf("FindOne user: %v error: %v", user, err)
-		return nil, err
+		if errors.Is(err, sqlx.ErrNotFound) {
+			return &service.FindByMobileResponse{UserId: -1}, nil
+		} else {
+			logx.Errorf("FindOneByMobile mobile: %v error: %v", in.Mobile, err)
+			return nil, err
+		}
 	}
 	return &service.FindByMobileResponse{
 		UserId:   user.Id,

@@ -42,6 +42,9 @@ func (l *InfoLogic) Info(req *types.InfoRequest) (resp *types.InfoResponse, err 
 		logx.Errorf("userRpc->FindById userId: %d error: %v", userId, err)
 		return nil, err
 	}
+	if IdResp.UserId == -1 {
+		return nil, ecode.UserNotExisted
+	}
 	return &types.InfoResponse{
 		UserId:   IdResp.UserId,
 		Username: IdResp.Username,

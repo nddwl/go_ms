@@ -8,7 +8,9 @@ import (
 var _codes = make(map[int]struct{})
 
 func New(code int, message string) Codes {
-
+	if _, ok := _codes[code]; ok {
+		panic("code重复")
+	}
 	return Code{
 		code:    code,
 		message: message,
