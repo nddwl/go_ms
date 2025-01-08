@@ -1,13 +1,17 @@
 package utils
 
 import (
-	"applet/internal/types"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
 	"math/rand"
 	"strconv"
 	"time"
 )
+
+type Token struct {
+	AccessToken  string `json:"access_token"`
+	AccessExpire int64  `json:"access_expire"`
+}
 
 // GenerateVerificationCode 生成 100000 到 999999 之间的随机数
 func GenerateVerificationCode() string {
@@ -28,7 +32,7 @@ func CompareHashAndPassword(hashPwd, pwd string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(hashPwd), []byte(hashPwd)) == nil
 }
 
-func GenerateToken(secretKey string, accessExpire int64, payloads map[string]interface{}) (types.Token, error) {
+func GenerateToken(secretKey string, accessExpire int64, payloads map[string]interface{}) (Token, error) {
 	iat := time.Now().Add(-time.Minute).Unix()
 	exp := iat + accessExpire
 	token := jwt.New(jwt.SigningMethodHS256)
@@ -41,9 +45,9 @@ func GenerateToken(secretKey string, accessExpire int64, payloads map[string]int
 	token.Claims = claims
 	tokenString, err := token.SignedString([]byte(secretKey))
 	if err != nil {
-		return types.Token{}, err
+		return Token{}, err
 	}
-	return types.Token{
+	return Token{
 		AccessToken:  tokenString,
 		AccessExpire: exp,
 	}, nil

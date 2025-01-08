@@ -1,14 +1,14 @@
 package ecode
 
 import (
-	"context"
 	"errors"
-	"github.com/zeromicro/go-zero/rest/httpx"
-	"net/http"
 	"strconv"
 )
 
+var _codes = make(map[int]struct{})
+
 func New(code int, message string) Codes {
+
 	return Code{
 		code:    code,
 		message: message,
@@ -44,19 +44,21 @@ func (c Code) Error() string {
 	return "Error" + strconv.Itoa(c.code) + ":" + c.message
 }
 
-func JsonCtx(ctx context.Context, w http.ResponseWriter, obj interface{}, err error) {
-	var e Codes
-	switch {
-	case err == nil:
-		e = Ok
-	case errors.As(err, &e):
-	default:
-		e = ServerErr
+func ErrorHandler() func(err error) (int, any) {
+	return func(err error) (int, any) {
+		var e Codes
+		switch {
+		case err == nil:
+			e = Ok
+		case errors.As(err, &e):
+		default:
+			e = ServerErr
+		}
+		resp := Response{
+			Code:     e.Code(),
+			Message:  e.Message(),
+			Resource: nil,
+		}
+		return 200, &resp
 	}
-	resp := Response{
-		Code:     e.Code(),
-		Message:  e.Message(),
-		Resource: obj,
-	}
-	httpx.WriteJsonCtx(ctx, w, resp.Code, &resp)
 }

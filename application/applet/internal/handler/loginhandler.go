@@ -1,13 +1,12 @@
 package handler
 
 import (
-	"applet/internal/ecode"
 	"net/http"
 
-	"applet/internal/logic"
-	"applet/internal/svc"
-	"applet/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
+	"zhihu/application/applet/internal/logic"
+	"zhihu/application/applet/internal/svc"
+	"zhihu/application/applet/internal/types"
 )
 
 func LoginHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
@@ -20,6 +19,10 @@ func LoginHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		l := logic.NewLoginLogic(r.Context(), svcCtx)
 		resp, err := l.Login(&req)
-		ecode.JsonCtx(r.Context(), w, resp, err)
+		if err != nil {
+			httpx.ErrorCtx(r.Context(), w, err)
+		} else {
+			httpx.OkJsonCtx(r.Context(), w, resp)
+		}
 	}
 }

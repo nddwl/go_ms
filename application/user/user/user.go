@@ -7,7 +7,7 @@ package user
 import (
 	"context"
 
-	"user/service"
+	"zhihu/application/user/service"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"

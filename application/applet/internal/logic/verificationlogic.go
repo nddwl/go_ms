@@ -1,16 +1,16 @@
 package logic
 
 import (
-	"applet/internal/ecode"
-	"applet/internal/svc"
-	"applet/internal/types"
-	"applet/service"
-	"applet/utils"
 	"context"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"strconv"
 	"time"
+	"zhihu/application/applet/internal/svc"
+	"zhihu/application/applet/internal/types"
+	"zhihu/application/applet/service"
+	"zhihu/pkg/ecode"
+	"zhihu/pkg/utils"
 )
 
 type VerificationLogic struct {

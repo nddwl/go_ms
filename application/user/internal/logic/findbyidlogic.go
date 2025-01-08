@@ -3,8 +3,8 @@ package logic
 import (
 	"context"
 
-	"user/internal/svc"
-	"user/service"
+	"zhihu/application/user/internal/svc"
+	"zhihu/application/user/service"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

@@ -1,12 +1,12 @@
 package logic
 
 import (
-	"applet/internal/ecode"
-	"applet/internal/svc"
-	"applet/internal/types"
-	"applet/service"
-	"applet/utils"
 	"context"
+	"zhihu/application/applet/internal/svc"
+	"zhihu/application/applet/internal/types"
+	"zhihu/application/applet/service"
+	"zhihu/pkg/ecode"
+	"zhihu/pkg/utils"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -67,6 +67,9 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.Regist
 	}
 	return &types.RegisterResponse{
 		UserId: registerResp.UserId,
-		Token:  token,
+		Token: types.Token{
+			AccessToken:  token.AccessToken,
+			AccessExpire: token.AccessExpire,
+		},
 	}, nil
 }

@@ -1,14 +1,13 @@
 package logic
 
 import (
-	"applet/internal/ecode"
-	"applet/internal/svc"
-	"applet/internal/types"
-	"applet/service"
 	"context"
 	"encoding/json"
-
 	"github.com/zeromicro/go-zero/core/logx"
+	"zhihu/application/applet/internal/svc"
+	"zhihu/application/applet/internal/types"
+	"zhihu/application/applet/service"
+	"zhihu/pkg/ecode"
 )
 
 type InfoLogic struct {

@@ -7,9 +7,9 @@ package server
 import (
 	"context"
 
-	"user/internal/logic"
-	"user/internal/svc"
-	"user/service"
+	"zhihu/application/user/internal/logic"
+	"zhihu/application/user/internal/svc"
+	"zhihu/application/user/service"
 )
 
 type UserServer struct {

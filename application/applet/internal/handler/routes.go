@@ -4,8 +4,8 @@
 package handler
 
 import (
-	"applet/internal/svc"
 	"net/http"
+	"zhihu/application/applet/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )

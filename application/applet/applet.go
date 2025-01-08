@@ -1,11 +1,13 @@
 package main
 
 import (
-	"applet/internal/config"
-	"applet/internal/handler"
-	"applet/internal/svc"
 	"flag"
 	"fmt"
+	"github.com/zeromicro/go-zero/rest/httpx"
+	"zhihu/application/applet/internal/config"
+	"zhihu/application/applet/internal/handler"
+	"zhihu/application/applet/internal/svc"
+	"zhihu/pkg/ecode"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
@@ -24,6 +26,9 @@ func main() {
 
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
+
+	//启用自定义错误
+	httpx.SetErrorHandler(ecode.ErrorHandler())
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
 	server.Start()

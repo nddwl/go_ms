@@ -4,10 +4,10 @@ import (
 	"flag"
 	"fmt"
 
-	"user/internal/config"
-	"user/internal/server"
-	"user/internal/svc"
-	"user/service"
+	"zhihu/application/user/internal/config"
+	"zhihu/application/user/internal/server"
+	"zhihu/application/user/internal/svc"
+	"zhihu/application/user/service"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	cs "github.com/zeromicro/go-zero/core/service"

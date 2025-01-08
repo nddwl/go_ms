@@ -1,13 +1,13 @@
 package logic
 
 import (
-	"applet/internal/ecode"
-	"applet/service"
-	"applet/utils"
 	"context"
+	"zhihu/application/applet/service"
+	"zhihu/pkg/ecode"
+	"zhihu/pkg/utils"
 
-	"applet/internal/svc"
-	"applet/internal/types"
+	"zhihu/application/applet/internal/svc"
+	"zhihu/application/applet/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -55,6 +55,9 @@ func (l *LoginLogic) Login(req *types.LoginRequest) (resp *types.LoginResponse, 
 	}
 	return &types.LoginResponse{
 		UserId: mobileResp.UserId,
-		Token:  token,
+		Token: types.Token{
+			AccessToken:  token.AccessToken,
+			AccessExpire: token.AccessExpire,
+		},
 	}, nil
 }

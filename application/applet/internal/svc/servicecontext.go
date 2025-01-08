@@ -1,11 +1,11 @@
 package svc
 
 import (
-	"applet/internal/config"
-	"applet/internal/validator"
-	"applet/service"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/zrpc"
+	"zhihu/application/applet/internal/config"
+	"zhihu/application/applet/internal/validator"
+	"zhihu/application/applet/service"
 )
 
 type ServiceContext struct {
