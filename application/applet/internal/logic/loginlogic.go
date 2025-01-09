@@ -28,7 +28,7 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 
 func (l *LoginLogic) Login(req *types.LoginRequest) (resp *types.LoginResponse, err error) {
 	if err = l.svcCtx.Validator.Struct(req); err != nil {
-		err = ecode.BadRequest
+		err = ecode.RequestErr
 		return
 	}
 	ok, err := verifyVerificationCode(l.svcCtx.Redis, req.Mobile, req.VerificationCode)

@@ -26,7 +26,7 @@ func NewInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *InfoLogic {
 
 func (l *InfoLogic) Info(req *types.InfoRequest) (resp *types.InfoResponse, err error) {
 	if err = l.svcCtx.Validator.Struct(req); err != nil {
-		err = ecode.BadRequest
+		err = ecode.RequestErr
 		return
 	}
 	userId, err := l.ctx.Value(types.UserIdKey).(json.Number).Int64()
@@ -37,17 +37,17 @@ func (l *InfoLogic) Info(req *types.InfoRequest) (resp *types.InfoResponse, err 
 	if userId == 0 {
 		return &types.InfoResponse{}, nil
 	}
-	IdResp, err := l.svcCtx.UserRpc.FindById(l.ctx, &service.FindByIdRequest{UserId: userId})
+	idResp, err := l.svcCtx.UserRpc.FindById(l.ctx, &service.FindByIdRequest{UserId: userId})
 	if err != nil {
 		logx.Errorf("userRpc->FindById userId: %d error: %v", userId, err)
 		return nil, err
 	}
-	if IdResp.UserId == -1 {
+	if idResp.UserId == -1 {
 		return nil, ecode.UserNotExisted
 	}
 	return &types.InfoResponse{
-		UserId:   IdResp.UserId,
-		Username: IdResp.Username,
-		Avatar:   IdResp.Avatar,
+		UserId:   idResp.UserId,
+		Username: idResp.Username,
+		Avatar:   idResp.Avatar,
 	}, nil
 }

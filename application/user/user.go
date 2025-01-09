@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-
 	"zhihu/application/user/internal/config"
 	"zhihu/application/user/internal/server"
 	"zhihu/application/user/internal/svc"
@@ -33,6 +32,10 @@ func main() {
 		}
 	})
 	defer s.Stop()
+	s.AddUnaryInterceptors()
+
+	//启用自定义错误处理
+	//s.AddUnaryInterceptors(ecode.ServerErrorInterceptor())
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()

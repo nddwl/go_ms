@@ -29,7 +29,7 @@ func NewVerificationLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Veri
 
 func (l *VerificationLogic) Verification(req *types.VerificationRequest) (resp *types.VerificationResponse, err error) {
 	if err = l.svcCtx.Validator.Struct(req); err != nil {
-		return nil, ecode.BadRequest
+		return nil, ecode.RequestErr
 	}
 	count, err := l.getVerificationCount(req.Mobile)
 	if err != nil {

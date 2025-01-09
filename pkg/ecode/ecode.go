@@ -18,9 +18,8 @@ func New(code int, message string) Codes {
 }
 
 type Response struct {
-	Code     int         `json:"code"`
-	Message  string      `json:"message"`
-	Resource interface{} `json:"resource"`
+	Code    int    `json:"code"`
+	Message string `json:"message"`
 }
 
 type Codes interface {
@@ -46,20 +45,24 @@ func (c Code) Error() string {
 	return "Error" + strconv.Itoa(c.code) + ":" + c.message
 }
 
+func Cause(err error) Codes {
+	var e Codes
+	switch {
+	case err == nil:
+		e = OK
+	case errors.As(err, &e):
+	default:
+		e = ServerErr
+	}
+	return e
+}
+
 func ErrorHandler() func(err error) (int, any) {
 	return func(err error) (int, any) {
-		var e Codes
-		switch {
-		case err == nil:
-			e = Ok
-		case errors.As(err, &e):
-		default:
-			e = ServerErr
-		}
+		e := Cause(err)
 		resp := Response{
-			Code:     e.Code(),
-			Message:  e.Message(),
-			Resource: nil,
+			Code:    e.Code(),
+			Message: e.Message(),
 		}
 		return 200, &resp
 	}

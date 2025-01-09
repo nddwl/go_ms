@@ -27,7 +27,7 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 
 func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.RegisterResponse, err error) {
 	if err = l.svcCtx.Validator.Struct(req); err != nil {
-		return nil, ecode.BadRequest
+		return nil, ecode.RequestErr
 	}
 	ok, err := verifyVerificationCode(l.svcCtx.Redis, req.Mobile, req.VerificationCode)
 	if err != nil {
@@ -42,7 +42,7 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.Regist
 		logx.Errorf("userRpc->FindByMobile mobile: %s error: %v", req.Mobile, err)
 		return nil, err
 	}
-	if mobileResp.UserId == -1 {
+	if mobileResp.UserId <= 0 {
 		return nil, ecode.MobileHasRegistered
 	}
 	registerResp, err := l.svcCtx.UserRpc.Register(l.ctx, &service.RegisterRequest{
