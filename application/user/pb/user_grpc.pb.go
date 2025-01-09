@@ -4,7 +4,7 @@
 // - protoc             v5.28.3
 // source: user.proto
 
-package service
+package pb
 
 import (
 	context "context"
@@ -19,13 +19,13 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	User_Register_FullMethodName     = "/service.User/Register"
-	User_FindById_FullMethodName     = "/service.User/FindById"
-	User_FindByMobile_FullMethodName = "/service.User/FindByMobile"
-	User_SendSms_FullMethodName      = "/service.User/SendSms"
+	User_Register_FullMethodName     = "/pb.User/Register"
+	User_FindById_FullMethodName     = "/pb.User/FindById"
+	User_FindByMobile_FullMethodName = "/pb.User/FindByMobile"
+	User_SendSms_FullMethodName      = "/pb.User/SendSms"
 )
 
-// UserClient is the client API for User service.
+// UserClient is the client API for User pb.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserClient interface {
@@ -83,7 +83,7 @@ func (c *userClient) SendSms(ctx context.Context, in *SendSmsRequest, opts ...gr
 	return out, nil
 }
 
-// UserServer is the server API for User service.
+// UserServer is the server API for User pb.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility.
 type UserServer interface {
@@ -116,7 +116,7 @@ func (UnimplementedUserServer) SendSms(context.Context, *SendSmsRequest) (*SendS
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 func (UnimplementedUserServer) testEmbeddedByValue()              {}
 
-// UnsafeUserServer may be embedded to opt out of forward compatibility for this service.
+// UnsafeUserServer may be embedded to opt out of forward compatibility for this pb.
 // Use of this interface is not recommended, as added methods to UserServer will
 // result in compilation errors.
 type UnsafeUserServer interface {
@@ -206,11 +206,11 @@ func _User_SendSms_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
-// User_ServiceDesc is the grpc.ServiceDesc for User service.
+// User_ServiceDesc is the grpc.ServiceDesc for User pb.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var User_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "service.User",
+	ServiceName: "pb.User",
 	HandlerType: (*UserServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

@@ -4,7 +4,7 @@ import (
 	"context"
 	"zhihu/application/applet/internal/svc"
 	"zhihu/application/applet/internal/types"
-	"zhihu/application/applet/service"
+	"zhihu/application/user/user"
 	"zhihu/pkg/ecode"
 	"zhihu/pkg/utils"
 
@@ -29,7 +29,7 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.Regist
 	if err = l.svcCtx.Validator.Struct(req); err != nil {
 		return nil, ecode.RequestErr
 	}
-	ok, err := verifyVerificationCode(l.svcCtx.Redis, req.Mobile, req.VerificationCode)
+	ok, err := verifyVerificationCode(l.svcCtx.BizRedis, req.Mobile, req.VerificationCode)
 	if err != nil {
 		logx.Errorf("verifyVerificationCode mobile: %s error: %v", req.Mobile, err)
 		return nil, err
@@ -37,7 +37,7 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.Regist
 	if !ok {
 		return nil, ecode.VerificationCodeFailed
 	}
-	mobileResp, err := l.svcCtx.UserRpc.FindByMobile(l.ctx, &service.FindByMobileRequest{})
+	mobileResp, err := l.svcCtx.UserRpc.FindByMobile(l.ctx, &user.FindByMobileRequest{})
 	if err != nil {
 		logx.Errorf("userRpc->FindByMobile mobile: %s error: %v", req.Mobile, err)
 		return nil, err
@@ -45,7 +45,7 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.Regist
 	if mobileResp.UserId <= 0 {
 		return nil, ecode.MobileHasRegistered
 	}
-	registerResp, err := l.svcCtx.UserRpc.Register(l.ctx, &service.RegisterRequest{
+	registerResp, err := l.svcCtx.UserRpc.Register(l.ctx, &user.RegisterRequest{
 		Username: req.Name,
 		Mobile:   req.Mobile,
 		Avatar:   "",
@@ -61,7 +61,7 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.Regist
 		logx.Errorf("GenerateToken userId: %d error: %v", registerResp.UserId, err)
 		return
 	}
-	err = delVerificationCode(l.svcCtx.Redis, req.Mobile)
+	err = delVerificationCode(l.svcCtx.BizRedis, req.Mobile)
 	if err != nil {
 		logx.Errorf("delVerificationCode error: %v", err)
 	}

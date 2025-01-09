@@ -6,7 +6,7 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"zhihu/application/user/internal/svc"
-	"zhihu/application/user/service"
+	"zhihu/application/user/pb"
 )
 
 type FindByIdLogic struct {
@@ -23,17 +23,17 @@ func NewFindByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FindById
 	}
 }
 
-func (l *FindByIdLogic) FindById(in *service.FindByIdRequest) (*service.FindByIdResponse, error) {
+func (l *FindByIdLogic) FindById(in *pb.FindByIdRequest) (*pb.FindByIdResponse, error) {
 	user, err := l.svcCtx.UserModel.FindOne(l.ctx, in.UserId)
 	if err != nil {
 		if errors.Is(err, sqlx.ErrNotFound) {
-			return &service.FindByIdResponse{UserId: -1}, nil
+			return &pb.FindByIdResponse{UserId: -1}, nil
 		} else {
 			logx.Errorf("FindOne id: %v error: %v", in.UserId, err)
 			return nil, err
 		}
 	}
-	return &service.FindByIdResponse{
+	return &pb.FindByIdResponse{
 		UserId:   user.Id,
 		Username: user.Username,
 		Mobile:   user.Mobile,

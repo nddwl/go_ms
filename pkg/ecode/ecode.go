@@ -1,6 +1,7 @@
 package ecode
 
 import (
+	"context"
 	"errors"
 	"strconv"
 )
@@ -18,8 +19,9 @@ func New(code int, message string) Codes {
 }
 
 type Response struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
+	Code     int    `json:"code"`
+	Message  string `json:"message"`
+	Resource any    `json:"resource"`
 }
 
 type Codes interface {
@@ -61,9 +63,20 @@ func ErrorHandler() func(err error) (int, any) {
 	return func(err error) (int, any) {
 		e := Cause(err)
 		resp := Response{
-			Code:    e.Code(),
-			Message: e.Message(),
+			Code:     e.Code(),
+			Message:  e.Message(),
+			Resource: nil,
 		}
 		return 200, &resp
+	}
+}
+
+func OkHandler() func(ctx context.Context, a any) any {
+	return func(ctx context.Context, a any) any {
+		return &Response{
+			Code:     OK.Code(),
+			Message:  OK.Message(),
+			Resource: a,
+		}
 	}
 }

@@ -2,7 +2,7 @@ package logic
 
 import (
 	"context"
-	"zhihu/application/applet/service"
+	"zhihu/application/user/user"
 	"zhihu/pkg/ecode"
 	"zhihu/pkg/utils"
 
@@ -31,7 +31,7 @@ func (l *LoginLogic) Login(req *types.LoginRequest) (resp *types.LoginResponse, 
 		err = ecode.RequestErr
 		return
 	}
-	ok, err := verifyVerificationCode(l.svcCtx.Redis, req.Mobile, req.VerificationCode)
+	ok, err := verifyVerificationCode(l.svcCtx.BizRedis, req.Mobile, req.VerificationCode)
 	if err != nil {
 		logx.Errorf("verifyVerificationCode mobile: %s error: %v", req.Mobile, err)
 		return nil, err
@@ -39,7 +39,7 @@ func (l *LoginLogic) Login(req *types.LoginRequest) (resp *types.LoginResponse, 
 	if !ok {
 		return nil, ecode.VerificationCodeFailed
 	}
-	mobileResp, err := l.svcCtx.UserRpc.FindByMobile(l.ctx, &service.FindByMobileRequest{Mobile: req.Mobile})
+	mobileResp, err := l.svcCtx.UserRpc.FindByMobile(l.ctx, &user.FindByMobileRequest{Mobile: req.Mobile})
 	if err != nil {
 		logx.Errorf("userRpc->FindByMobile mobile: %s error: %v", req.Mobile, err)
 		return nil, err

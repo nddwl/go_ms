@@ -6,7 +6,7 @@ import (
 	"zhihu/application/user/internal/model"
 
 	"zhihu/application/user/internal/svc"
-	"zhihu/application/user/service"
+	"zhihu/application/user/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,7 +25,7 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 	}
 }
 
-func (l *RegisterLogic) Register(in *service.RegisterRequest) (*service.RegisterResponse, error) {
+func (l *RegisterLogic) Register(in *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 	user := model.User{
 		Username:   in.Username,
 		Mobile:     in.Mobile,
@@ -42,5 +42,5 @@ func (l *RegisterLogic) Register(in *service.RegisterRequest) (*service.Register
 		logx.Errorf("LastInsertId error: %v", err)
 		return nil, err
 	}
-	return &service.RegisterResponse{UserId: userId}, nil
+	return &pb.RegisterResponse{UserId: userId}, nil
 }

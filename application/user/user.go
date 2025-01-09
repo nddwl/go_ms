@@ -6,7 +6,7 @@ import (
 	"zhihu/application/user/internal/config"
 	"zhihu/application/user/internal/server"
 	"zhihu/application/user/internal/svc"
-	"zhihu/application/user/service"
+	"zhihu/application/user/pb"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	cs "github.com/zeromicro/go-zero/core/service"
@@ -25,17 +25,13 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		service.RegisterUserServer(grpcServer, server.NewUserServer(ctx))
+		pb.RegisterUserServer(grpcServer, server.NewUserServer(ctx))
 
 		if c.Mode == cs.DevMode || c.Mode == cs.TestMode {
 			reflection.Register(grpcServer)
 		}
 	})
 	defer s.Stop()
-	s.AddUnaryInterceptors()
-
-	//启用自定义错误处理
-	//s.AddUnaryInterceptors(ecode.ServerErrorInterceptor())
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()

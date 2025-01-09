@@ -1,5 +1,5 @@
-create database beyond_user;
-use beyond_user;
+create database zhihu_user;
+use zhihu_user;
 
 CREATE TABLE `user` (
                         `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',

@@ -57,5 +57,10 @@ goctl model mysql datasource --dir ./internal/model --table user --cache true --
 
 ## 3.服务注册与发现
 
-![服务注册与发现](https://github.com/nddwl/zhihu/blob/master/png/%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0.png)
+![服务注册与发现](https://github.com/nddwl/zhihu/blob/master/png/server.png)
+
+## 4.文章功能
+
+![文章功能](https://github.com/nddwl/zhihu/blob/master/png/article.png)
+
 

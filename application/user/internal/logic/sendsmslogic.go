@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"zhihu/application/user/internal/svc"
-	"zhihu/application/user/service"
+	"zhihu/application/user/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -23,8 +23,8 @@ func NewSendSmsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SendSmsLo
 	}
 }
 
-func (l *SendSmsLogic) SendSms(in *service.SendSmsRequest) (*service.SendSmsResponse, error) {
+func (l *SendSmsLogic) SendSms(in *pb.SendSmsRequest) (*pb.SendSmsResponse, error) {
 	// todo: add your logic here and delete this line
 
-	return &service.SendSmsResponse{}, nil
+	return &pb.SendSmsResponse{}, nil
 }

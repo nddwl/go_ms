@@ -29,6 +29,7 @@ func main() {
 
 	//启用自定义错误
 	httpx.SetErrorHandler(ecode.ErrorHandler())
+	httpx.SetOkHandler(ecode.OkHandler())
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
 	server.Start()

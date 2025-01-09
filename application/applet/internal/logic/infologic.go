@@ -6,7 +6,7 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 	"zhihu/application/applet/internal/svc"
 	"zhihu/application/applet/internal/types"
-	"zhihu/application/applet/service"
+	"zhihu/application/user/user"
 	"zhihu/pkg/ecode"
 )
 
@@ -37,7 +37,7 @@ func (l *InfoLogic) Info(req *types.InfoRequest) (resp *types.InfoResponse, err 
 	if userId == 0 {
 		return &types.InfoResponse{}, nil
 	}
-	idResp, err := l.svcCtx.UserRpc.FindById(l.ctx, &service.FindByIdRequest{UserId: userId})
+	idResp, err := l.svcCtx.UserRpc.FindById(l.ctx, &user.FindByIdRequest{UserId: userId})
 	if err != nil {
 		logx.Errorf("userRpc->FindById userId: %d error: %v", userId, err)
 		return nil, err

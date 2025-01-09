@@ -8,7 +8,7 @@ import (
 	"time"
 	"zhihu/application/applet/internal/svc"
 	"zhihu/application/applet/internal/types"
-	"zhihu/application/applet/service"
+	"zhihu/application/user/user"
 	"zhihu/pkg/ecode"
 	"zhihu/pkg/utils"
 )
@@ -40,7 +40,7 @@ func (l *VerificationLogic) Verification(req *types.VerificationRequest) (resp *
 		return nil, ecode.VerificationMaxLimit
 	}
 	code := utils.GenerateVerificationCode()
-	_, err = l.svcCtx.UserRpc.SendSms(l.ctx, &service.SendSmsRequest{Mobile: req.Mobile})
+	_, err = l.svcCtx.UserRpc.SendSms(l.ctx, &user.SendSmsRequest{Mobile: req.Mobile})
 	if err != nil {
 		logx.Errorf("userRpc->sendSms mobile: %s error: %v", req.Mobile, err)
 		return nil, err
@@ -60,7 +60,7 @@ func (l *VerificationLogic) Verification(req *types.VerificationRequest) (resp *
 }
 
 func (l *VerificationLogic) getVerificationCount(mobile string) (int, error) {
-	count, err := l.svcCtx.Redis.Get(types.Prefix + ":count:" + mobile)
+	count, err := l.svcCtx.BizRedis.Get(types.Prefix + ":count:" + mobile)
 	if err != nil {
 		return 0, err
 	}
@@ -72,15 +72,15 @@ func (l *VerificationLogic) getVerificationCount(mobile string) (int, error) {
 
 func (l *VerificationLogic) incrVerificationCount(mobile string) error {
 	key := types.Prefix + ":count:" + mobile
-	_, err := l.svcCtx.Redis.Incr(key)
+	_, err := l.svcCtx.BizRedis.Incr(key)
 	if err != nil {
 		return nil
 	}
-	return l.svcCtx.Redis.Expireat(key, utils.EndOfDay(time.Now()).Unix())
+	return l.svcCtx.BizRedis.Expireat(key, utils.EndOfDay(time.Now()).Unix())
 }
 
 func (l *VerificationLogic) saveVerificationCode(mobile string, code string) error {
-	return l.svcCtx.Redis.Setex(types.Prefix+":code:"+mobile, code, types.ExpireTime)
+	return l.svcCtx.BizRedis.Setex(types.Prefix+":code:"+mobile, code, types.ExpireTime)
 }
 
 func verifyVerificationCode(redis *redis.Redis, mobile string, code string) (bool, error) {

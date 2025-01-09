@@ -4,7 +4,7 @@
 // 	protoc        v5.28.3
 // source: user.proto
 
-package service
+package pb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -527,24 +527,24 @@ func file_user_proto_rawDescGZIP() []byte {
 
 var file_user_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_user_proto_goTypes = []any{
-	(*RegisterRequest)(nil),      // 0: service.RegisterRequest
-	(*RegisterResponse)(nil),     // 1: service.RegisterResponse
-	(*FindByIdRequest)(nil),      // 2: service.FindByIdRequest
-	(*FindByIdResponse)(nil),     // 3: service.FindByIdResponse
-	(*FindByMobileRequest)(nil),  // 4: service.FindByMobileRequest
-	(*FindByMobileResponse)(nil), // 5: service.FindByMobileResponse
-	(*SendSmsRequest)(nil),       // 6: service.SendSmsRequest
-	(*SendSmsResponse)(nil),      // 7: service.SendSmsResponse
+	(*RegisterRequest)(nil),      // 0: pb.RegisterRequest
+	(*RegisterResponse)(nil),     // 1: pb.RegisterResponse
+	(*FindByIdRequest)(nil),      // 2: pb.FindByIdRequest
+	(*FindByIdResponse)(nil),     // 3: pb.FindByIdResponse
+	(*FindByMobileRequest)(nil),  // 4: pb.FindByMobileRequest
+	(*FindByMobileResponse)(nil), // 5: pb.FindByMobileResponse
+	(*SendSmsRequest)(nil),       // 6: pb.SendSmsRequest
+	(*SendSmsResponse)(nil),      // 7: pb.SendSmsResponse
 }
 var file_user_proto_depIdxs = []int32{
-	0, // 0: service.User.Register:input_type -> service.RegisterRequest
-	2, // 1: service.User.FindById:input_type -> service.FindByIdRequest
-	4, // 2: service.User.FindByMobile:input_type -> service.FindByMobileRequest
-	6, // 3: service.User.SendSms:input_type -> service.SendSmsRequest
-	1, // 4: service.User.Register:output_type -> service.RegisterResponse
-	3, // 5: service.User.FindById:output_type -> service.FindByIdResponse
-	5, // 6: service.User.FindByMobile:output_type -> service.FindByMobileResponse
-	7, // 7: service.User.SendSms:output_type -> service.SendSmsResponse
+	0, // 0: pb.User.Register:input_type -> pb.RegisterRequest
+	2, // 1: pb.User.FindById:input_type -> pb.FindByIdRequest
+	4, // 2: pb.User.FindByMobile:input_type -> pb.FindByMobileRequest
+	6, // 3: pb.User.SendSms:input_type -> pb.SendSmsRequest
+	1, // 4: pb.User.Register:output_type -> pb.RegisterResponse
+	3, // 5: pb.User.FindById:output_type -> pb.FindByIdResponse
+	5, // 6: pb.User.FindByMobile:output_type -> pb.FindByMobileResponse
+	7, // 7: pb.User.SendSms:output_type -> pb.SendSmsResponse
 	4, // [4:8] is the sub-list for method output_type
 	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
