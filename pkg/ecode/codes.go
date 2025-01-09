@@ -18,4 +18,5 @@ var (
 	VerificationCodeFailed = New(10101, "验证码错误")
 	MobileHasRegistered    = New(10200, "手机号已注册")
 	UserNotExisted         = New(10201, "用户不存在")
+	PutBucketObjectErr     = New(20100, "文件上传失败")
 )

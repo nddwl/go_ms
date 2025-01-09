@@ -8,6 +8,7 @@ import (
 	"zhihu/application/applet/internal/types"
 	"zhihu/application/user/user"
 	"zhihu/pkg/ecode"
+	"zhihu/pkg/validator"
 )
 
 type InfoLogic struct {
@@ -25,13 +26,13 @@ func NewInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *InfoLogic {
 }
 
 func (l *InfoLogic) Info(req *types.InfoRequest) (resp *types.InfoResponse, err error) {
-	if err = l.svcCtx.Validator.Struct(req); err != nil {
+	if err = validator.Struct(req); err != nil {
 		err = ecode.RequestErr
 		return
 	}
 	userId, err := l.ctx.Value(types.UserIdKey).(json.Number).Int64()
 	if err != nil {
-		logx.Errorf("ctx.Value(%s) error: %v", types.UserIdKey, err)
+		logx.Errorf("l.ctx.Value(%s) error: %v", types.UserIdKey, err)
 		return nil, err
 	}
 	if userId == 0 {
@@ -39,7 +40,7 @@ func (l *InfoLogic) Info(req *types.InfoRequest) (resp *types.InfoResponse, err 
 	}
 	idResp, err := l.svcCtx.UserRpc.FindById(l.ctx, &user.FindByIdRequest{UserId: userId})
 	if err != nil {
-		logx.Errorf("userRpc->FindById userId: %d error: %v", userId, err)
+		logx.Errorf("UserRpc->FindById userId: %d error: %v", userId, err)
 		return nil, err
 	}
 	if idResp.UserId == -1 {

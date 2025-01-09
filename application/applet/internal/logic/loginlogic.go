@@ -5,6 +5,7 @@ import (
 	"zhihu/application/user/user"
 	"zhihu/pkg/ecode"
 	"zhihu/pkg/utils"
+	"zhihu/pkg/validator"
 
 	"zhihu/application/applet/internal/svc"
 	"zhihu/application/applet/internal/types"
@@ -27,7 +28,7 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 }
 
 func (l *LoginLogic) Login(req *types.LoginRequest) (resp *types.LoginResponse, err error) {
-	if err = l.svcCtx.Validator.Struct(req); err != nil {
+	if err = validator.Struct(req); err != nil {
 		err = ecode.RequestErr
 		return
 	}
@@ -41,7 +42,7 @@ func (l *LoginLogic) Login(req *types.LoginRequest) (resp *types.LoginResponse, 
 	}
 	mobileResp, err := l.svcCtx.UserRpc.FindByMobile(l.ctx, &user.FindByMobileRequest{Mobile: req.Mobile})
 	if err != nil {
-		logx.Errorf("userRpc->FindByMobile mobile: %s error: %v", req.Mobile, err)
+		logx.Errorf("UserRpc->FindByMobile mobile: %s error: %v", req.Mobile, err)
 		return nil, err
 	}
 	if mobileResp.UserId == -1 {

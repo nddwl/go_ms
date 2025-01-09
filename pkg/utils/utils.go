@@ -2,6 +2,7 @@ package utils
 
 import (
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"math/rand"
 	"strconv"
@@ -52,4 +53,8 @@ func GenerateToken(secretKey string, accessExpire int64, payloads map[string]int
 		AccessExpire: exp,
 	}, nil
 
+}
+
+func GenerateUUID() string {
+	return uuid.New().String()
 }

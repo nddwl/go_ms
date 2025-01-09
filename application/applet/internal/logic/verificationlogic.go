@@ -11,6 +11,7 @@ import (
 	"zhihu/application/user/user"
 	"zhihu/pkg/ecode"
 	"zhihu/pkg/utils"
+	"zhihu/pkg/validator"
 )
 
 type VerificationLogic struct {
@@ -28,7 +29,7 @@ func NewVerificationLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Veri
 }
 
 func (l *VerificationLogic) Verification(req *types.VerificationRequest) (resp *types.VerificationResponse, err error) {
-	if err = l.svcCtx.Validator.Struct(req); err != nil {
+	if err = validator.Struct(req); err != nil {
 		return nil, ecode.RequestErr
 	}
 	count, err := l.getVerificationCount(req.Mobile)
@@ -42,7 +43,7 @@ func (l *VerificationLogic) Verification(req *types.VerificationRequest) (resp *
 	code := utils.GenerateVerificationCode()
 	_, err = l.svcCtx.UserRpc.SendSms(l.ctx, &user.SendSmsRequest{Mobile: req.Mobile})
 	if err != nil {
-		logx.Errorf("userRpc->sendSms mobile: %s error: %v", req.Mobile, err)
+		logx.Errorf("UserRpc->sendSms mobile: %s error: %v", req.Mobile, err)
 		return nil, err
 	}
 	err = l.saveVerificationCode(req.Mobile, code)

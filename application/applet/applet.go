@@ -27,7 +27,6 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
 
-	//启用自定义错误
 	httpx.SetErrorHandler(ecode.ErrorHandler())
 	httpx.SetOkHandler(ecode.OkHandler())
 
