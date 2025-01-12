@@ -5,6 +5,7 @@ import (
 	"github.com/zeromicro/go-zero/zrpc"
 	"zhihu/application/article/api/internal/config"
 	"zhihu/application/article/rpc/article"
+	"zhihu/pkg/interceptor"
 )
 
 type ServiceContext struct {
@@ -20,7 +21,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	}
 	return &ServiceContext{
 		Config:     c,
-		ArticleRpc: article.NewArticle(zrpc.MustNewClient(c.ArticleRpc)),
+		ArticleRpc: article.NewArticle(zrpc.MustNewClient(c.ArticleRpc, zrpc.WithUnaryClientInterceptor(interceptor.ClientErrorInterceptor()))),
 		Oss:        oc,
 	}
 }

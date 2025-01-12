@@ -2,8 +2,10 @@ package logic
 
 import (
 	"context"
+	"strconv"
 	"time"
 	"zhihu/application/article/rpc/internal/model"
+	"zhihu/application/article/rpc/internal/types"
 
 	"zhihu/application/article/rpc/internal/svc"
 	"zhihu/application/article/rpc/pb"
@@ -45,6 +47,24 @@ func (l *PublishLogic) Publish(in *pb.PublishRequest) (*pb.PublishResponse, erro
 	if err != nil {
 		logx.Errorf("LastInsertId error: %v", err)
 		return nil, err
+	}
+	likeKey := articleKey(article.AuthorId, types.SortLikeNum)
+	likeScore := articleScore(types.SortLikeNum, article.LikeNum, article.PublishTime.Unix())
+	publishKey := articleKey(article.AuthorId, types.SortPublishTime)
+	publishScore := articleScore(types.SortPublishTime, article.LikeNum, article.PublishTime.Unix())
+	b, _ := l.svcCtx.BizRedis.ExistsCtx(l.ctx, likeKey)
+	if b {
+		_, err = l.svcCtx.BizRedis.ZaddFloatCtx(l.ctx, likeKey, likeScore, strconv.FormatInt(articleId, 10))
+		if err != nil {
+			logx.Errorf("Zadd key:%s score: %f error: %v", likeKey, likeScore, err)
+		}
+	}
+	b, _ = l.svcCtx.BizRedis.ExistsCtx(l.ctx, publishKey)
+	if b {
+		_, err = l.svcCtx.BizRedis.ZaddFloatCtx(l.ctx, publishKey, publishScore, strconv.FormatInt(articleId, 10))
+		if err != nil {
+			logx.Errorf("Zadd key:%s score: %f error: %v", publishKey, publishScore, err)
+		}
 	}
 	return &pb.PublishResponse{ArticleId: articleId}, nil
 }

@@ -43,7 +43,7 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.Regist
 		logx.Errorf("UserRpc->FindByMobile mobile: %s error: %v", req.Mobile, err)
 		return nil, err
 	}
-	if mobileResp.UserId <= 0 {
+	if mobileResp.UserId > 0 {
 		return nil, ecode.MobileHasRegistered
 	}
 	registerResp, err := l.svcCtx.UserRpc.Register(l.ctx, &user.RegisterRequest{

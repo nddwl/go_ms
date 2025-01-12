@@ -40,7 +40,7 @@ func (l *ThumbupLogic) Thumbup(in *pb.ThumbupRequest) (*pb.ThumbupResponse, erro
 			logx.Errorf("Thmbup Marshal msg: %v error: %v", msg, err)
 			return
 		}
-		err = l.svcCtx.KqPusher.Push(l.ctx, string(data))
+		err = l.svcCtx.KqPusher.Push(context.Background(), string(data))
 		if err != nil {
 			logx.Errorf("KqPusher.Push error: %v", err)
 		}

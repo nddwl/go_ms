@@ -5,9 +5,12 @@ option go_package="./pb";
 
 service Article {
     rpc Publish(PublishRequest) returns (PublishResponse);
+    rpc Articles(ArticlesRequest) returns (ArticlesResponse);
+    rpc ArticleDelete(ArticleDeleteRequest) returns (ArticleDeleteResponse);
+    rpc ArticleDetail(ArticleDetailRequest) returns (ArticleDetailResponse);
 }
 
-message PublishRequest {
+message PublishRequest{
     int64 user_id = 1;
     string title = 2;
     string content = 3;
@@ -15,6 +18,58 @@ message PublishRequest {
     string cover = 5;
 }
 
-message PublishResponse {
+message PublishResponse{
     int64 article_id = 1;
+}
+
+message ArticlesRequest{
+    int64 user_id = 1;
+    int64 page_size = 2;
+    int32 sort_type = 3;
+    double cursor = 4;
+    int64 article_id =7;
+}
+
+message ArticleItem{
+    int64 id = 1;
+    string title = 2;
+    string content = 3;
+    string cover = 4;
+    string description = 5;
+    int64 comment_num = 6;
+    int64 like_num = 7;
+    int64 collect_num = 8;
+    int64 view_num = 9;
+    int64 share_num = 10;
+    string tag_ids = 11;
+    int64 publish_time = 12;
+    int64 update_time = 13;
+    int64 author_id = 14;
+}
+
+message ArticlesResponse{
+    repeated ArticleItem articles = 1;
+    bool is_end = 2;
+    int64 user_id = 3;
+    int64 page_size = 4;
+    int32 sort_type = 5;
+    double cursor = 6;
+    int64 article_id =7;
+}
+
+message ArticleDeleteRequest{
+    int64 user_id = 1;
+    int64 article_id = 2;
+}
+
+message ArticleDeleteResponse{
+
+}
+
+message ArticleDetailRequest{
+    int64 article_id = 1;
+}
+
+message ArticleDetailResponse{
+    ArticleItem article = 1;
 }

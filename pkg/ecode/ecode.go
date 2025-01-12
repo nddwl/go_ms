@@ -8,7 +8,7 @@ import (
 
 var _codes = make(map[int]struct{})
 
-func New(code int, message string) Codes {
+func New(code int, message string) Code {
 	if _, ok := _codes[code]; ok {
 		panic("code重复")
 	}
@@ -28,7 +28,10 @@ type Codes interface {
 	error
 	Code() int
 	Message() string
+	Details() []interface{}
 }
+
+var _ Codes = Code{}
 
 type Code struct {
 	code    int
@@ -47,12 +50,20 @@ func (c Code) Error() string {
 	return "Error" + strconv.Itoa(c.code) + ":" + c.message
 }
 
+func (c Code) Details() []interface{} {
+	return nil
+}
+
 func Cause(err error) Codes {
 	var e Codes
 	switch {
 	case err == nil:
 		e = OK
 	case errors.As(err, &e):
+	case errors.Is(err, context.Canceled):
+		e = Canceled
+	case errors.Is(err, context.DeadlineExceeded):
+		e = Deadline
 	default:
 		e = ServerErr
 	}
