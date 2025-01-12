@@ -60,8 +60,16 @@ func (l *VerificationLogic) Verification(req *types.VerificationRequest) (resp *
 	return &types.VerificationResponse{}, nil
 }
 
+func countKey(mobile string) string {
+	return types.Prefix + ":count:" + mobile
+}
+
+func codeKey(mobile string) string {
+	return types.Prefix + ":code:" + mobile
+}
+
 func (l *VerificationLogic) getVerificationCount(mobile string) (int, error) {
-	count, err := l.svcCtx.BizRedis.Get(types.Prefix + ":count:" + mobile)
+	count, err := l.svcCtx.BizRedis.Get(countKey(mobile))
 	if err != nil {
 		return 0, err
 	}
@@ -72,7 +80,7 @@ func (l *VerificationLogic) getVerificationCount(mobile string) (int, error) {
 }
 
 func (l *VerificationLogic) incrVerificationCount(mobile string) error {
-	key := types.Prefix + ":count:" + mobile
+	key := countKey(mobile)
 	_, err := l.svcCtx.BizRedis.Incr(key)
 	if err != nil {
 		return nil
@@ -81,11 +89,11 @@ func (l *VerificationLogic) incrVerificationCount(mobile string) error {
 }
 
 func (l *VerificationLogic) saveVerificationCode(mobile string, code string) error {
-	return l.svcCtx.BizRedis.Setex(types.Prefix+":code:"+mobile, code, types.ExpireTime)
+	return l.svcCtx.BizRedis.Setex(codeKey(mobile), code, types.ExpireTime)
 }
 
 func verifyVerificationCode(redis *redis.Redis, mobile string, code string) (bool, error) {
-	c, err := redis.Get(types.Prefix + ":code:" + mobile)
+	c, err := redis.Get(codeKey(mobile))
 	switch {
 	case err != nil:
 		return false, err
@@ -97,6 +105,6 @@ func verifyVerificationCode(redis *redis.Redis, mobile string, code string) (boo
 }
 
 func delVerificationCode(redis *redis.Redis, mobile string) error {
-	_, err := redis.Del(types.Prefix + ":code:" + mobile)
+	_, err := redis.Del(codeKey(mobile))
 	return err
 }

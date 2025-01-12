@@ -14,9 +14,11 @@ var (
 	Deadline           = New(504, "DEADLINE_EXCEEDED")
 	LimitExceed        = New(509, "RESOURCE_EXHAUSTED")
 
-	VerificationMaxLimit   = New(10100, "已达今日请求上限")
-	VerificationCodeFailed = New(10101, "验证码错误")
-	MobileHasRegistered    = New(10200, "手机号已注册")
-	UserNotExisted         = New(10201, "用户不存在")
-	PutBucketObjectErr     = New(20100, "文件上传失败")
+	//用户服务
+	VerificationMaxLimit   = New(10001, "已达今日请求上限")
+	VerificationCodeFailed = New(10002, "验证码错误")
+	MobileHasRegistered    = New(10003, "手机号已注册")
+	UserNotExisted         = New(10004, "用户不存在")
+	//文章服务
+	PutBucketObjectErr = New(20001, "文件上传失败")
 )
