@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"path/filepath"
+	"zhihu/application/article/api/internal/code"
 	"zhihu/pkg/ecode"
 	"zhihu/pkg/utils"
 
@@ -42,7 +43,7 @@ func (l *UploadCoverLogic) UploadCover(req *http.Request) (resp *types.UploadCov
 	err = bucket.PutObject(key, file)
 	if err != nil {
 		logx.Errorf("PutObject error: %v", err)
-		return nil, ecode.PutBucketObjectErr
+		return nil, code.PutBucketObjectErr
 	}
 	return &types.UploadCoverResponse{CoverUrl: fileUrl(key)}, nil
 }

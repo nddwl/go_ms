@@ -3,8 +3,8 @@ package logic
 import (
 	"context"
 	"errors"
+	"zhihu/application/article/rpc/internal/code"
 	"zhihu/application/article/rpc/internal/model"
-
 	"zhihu/application/article/rpc/internal/svc"
 	"zhihu/application/article/rpc/pb"
 
@@ -26,6 +26,9 @@ func NewArticleDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Art
 }
 
 func (l *ArticleDetailLogic) ArticleDetail(in *pb.ArticleDetailRequest) (*pb.ArticleDetailResponse, error) {
+	if in.ArticleId <= 0 {
+		return nil, code.ArticleIdInvalid
+	}
 	article, err := l.svcCtx.ArticleModel.FindOne(l.ctx, in.ArticleId)
 	if err != nil {
 		if errors.Is(err, model.ErrNotFound) {

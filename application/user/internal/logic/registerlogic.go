@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"time"
+	"zhihu/application/user/internal/code"
 	"zhihu/application/user/internal/model"
 
 	"zhihu/application/user/internal/svc"
@@ -26,6 +27,9 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 }
 
 func (l *RegisterLogic) Register(in *pb.RegisterRequest) (*pb.RegisterResponse, error) {
+	if in.Username == "" {
+		return nil, code.RegisterNameEmpty
+	}
 	user := model.User{
 		Username:   in.Username,
 		Mobile:     in.Mobile,

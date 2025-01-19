@@ -10,6 +10,7 @@ import (
 	"slices"
 	"strconv"
 	"time"
+	"zhihu/application/article/rpc/internal/code"
 	"zhihu/application/article/rpc/internal/model"
 	"zhihu/application/article/rpc/internal/svc"
 	"zhihu/application/article/rpc/internal/types"
@@ -31,6 +32,22 @@ func NewArticlesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Articles
 }
 
 func (l *ArticlesLogic) Articles(in *pb.ArticlesRequest) (*pb.ArticlesResponse, error) {
+	if in.UserId <= 0 {
+		return nil, code.UserIdInvalid
+	}
+	if in.SortType != types.SortLikeNum && in.SortType != types.SortPublishTime {
+		return nil, code.SortTypeInvalid
+	}
+	if in.PageSize == 0 {
+		in.PageSize = types.DefaultPageSize
+	}
+	if in.Cursor <= 0 {
+		if in.SortType == types.SortPublishTime {
+			in.Cursor = float64(time.Now().Unix())
+		} else {
+			in.Cursor = float64(types.DefaultSortLikeCursor)
+		}
+	}
 	var (
 		err                    error
 		isCache, isEnd         bool
@@ -126,12 +143,12 @@ func (l *ArticlesLogic) Articles(in *pb.ArticlesRequest) (*pb.ArticlesResponse, 
 	for i := 0; i < len(curPage); i++ {
 		article := curPage[i]
 		if in.SortType == types.SortPublishTime {
-			if article.Id == in.ArticleId {
+			if article.Id == in.ArticleId && article.PublishTime == int64(in.Cursor) {
 				curPage = curPage[i+1:]
 				break
 			}
 		} else {
-			if article.Id == in.ArticleId {
+			if article.Id == in.ArticleId && article.LikeNum == int64(in.Cursor) {
 				curPage = curPage[i+1:]
 				break
 			}

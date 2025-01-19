@@ -4,6 +4,7 @@ import (
 	"context"
 	"strconv"
 	"time"
+	"zhihu/application/article/rpc/internal/code"
 	"zhihu/application/article/rpc/internal/model"
 	"zhihu/application/article/rpc/internal/types"
 
@@ -28,6 +29,15 @@ func NewPublishLogic(ctx context.Context, svcCtx *svc.ServiceContext) *PublishLo
 }
 
 func (l *PublishLogic) Publish(in *pb.PublishRequest) (*pb.PublishResponse, error) {
+	if in.UserId <= 0 {
+		return nil, code.UserIdInvalid
+	}
+	if len(in.Title) == 0 {
+		return nil, code.ArticleTitleCantEmpty
+	}
+	if len(in.Content) == 0 {
+		return nil, code.ArticleContentCantEmpty
+	}
 	article := model.Article{
 		Title:       in.Title,
 		Content:     in.Content,

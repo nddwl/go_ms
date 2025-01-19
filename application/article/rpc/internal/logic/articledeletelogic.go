@@ -2,9 +2,9 @@ package logic
 
 import (
 	"context"
-	"zhihu/application/article/rpc/internal/types"
-
+	"zhihu/application/article/rpc/internal/code"
 	"zhihu/application/article/rpc/internal/svc"
+	"zhihu/application/article/rpc/internal/types"
 	"zhihu/application/article/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -25,6 +25,12 @@ func NewArticleDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Art
 }
 
 func (l *ArticleDeleteLogic) ArticleDelete(in *pb.ArticleDeleteRequest) (*pb.ArticleDeleteResponse, error) {
+	if in.UserId <= 0 {
+		return nil, code.UserIdInvalid
+	}
+	if in.ArticleId <= 0 {
+		return nil, code.ArticleIdInvalid
+	}
 	err := l.svcCtx.ArticleModel.UpdateArticleStatus(l.ctx, in.ArticleId, types.ArticleStatusUserDelete)
 	if err != nil {
 		logx.Errorf("UpdateArticleStatus req: %v error: %v", in, err)

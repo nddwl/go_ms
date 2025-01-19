@@ -110,7 +110,11 @@ func (l *ormLog) Trace(ctx context.Context, begin time.Time, fc func() (string, 
 	}
 }
 
-func NewMysql(c Config) (*gorm.DB, error) {
+type DB struct {
+	*gorm.DB
+}
+
+func NewMysql(c Config) (*DB, error) {
 	if c.MaxOpenConns == 0 {
 		c.MaxOpenConns = 10
 	}
@@ -137,10 +141,23 @@ func NewMysql(c Config) (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	return db, nil
+	sqlDB, err := db.DB()
+	if err != nil {
+		return nil, err
+	}
+	sqlDB.SetMaxOpenConns(c.MaxOpenConns)
+	sqlDB.SetMaxIdleConns(c.MaxIdleConns)
+	sqlDB.SetConnMaxLifetime(time.Second * time.Duration(c.MaxLifeTime))
+
+	err = db.Use(NewPlugin())
+	if err != nil {
+		return nil, err
+	}
+
+	return &DB{db}, nil
 }
 
-func MustNewMysql(c Config) *gorm.DB {
+func MustNewMysql(c Config) *DB {
 	db, err := NewMysql(c)
 	if err != nil {
 		panic(err)

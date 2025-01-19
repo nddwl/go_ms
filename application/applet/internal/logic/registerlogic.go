@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"zhihu/application/applet/internal/code"
 	"zhihu/application/applet/internal/svc"
 	"zhihu/application/applet/internal/types"
 	"zhihu/application/user/user"
@@ -36,7 +37,7 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.Regist
 		return nil, err
 	}
 	if !ok {
-		return nil, ecode.VerificationCodeFailed
+		return nil, code.VerificationCodeFailed
 	}
 	mobileResp, err := l.svcCtx.UserRpc.FindByMobile(l.ctx, &user.FindByMobileRequest{})
 	if err != nil {
@@ -44,7 +45,7 @@ func (l *RegisterLogic) Register(req *types.RegisterRequest) (resp *types.Regist
 		return nil, err
 	}
 	if mobileResp.UserId > 0 {
-		return nil, ecode.MobileHasRegistered
+		return nil, code.MobileHasRegistered
 	}
 	registerResp, err := l.svcCtx.UserRpc.Register(l.ctx, &user.RegisterRequest{
 		Username: req.Name,

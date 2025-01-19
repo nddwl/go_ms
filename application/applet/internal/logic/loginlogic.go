@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"zhihu/application/applet/internal/code"
 	"zhihu/application/user/user"
 	"zhihu/pkg/ecode"
 	"zhihu/pkg/utils"
@@ -38,15 +39,15 @@ func (l *LoginLogic) Login(req *types.LoginRequest) (resp *types.LoginResponse, 
 		return nil, err
 	}
 	if !ok {
-		return nil, ecode.VerificationCodeFailed
+		return nil, code.VerificationCodeFailed
 	}
 	mobileResp, err := l.svcCtx.UserRpc.FindByMobile(l.ctx, &user.FindByMobileRequest{Mobile: req.Mobile})
 	if err != nil {
 		logx.Errorf("UserRpc->FindByMobile mobile: %s error: %v", req.Mobile, err)
 		return nil, err
 	}
-	if mobileResp.UserId == -1 {
-		return nil, ecode.UserNotExisted
+	if mobileResp.UserId <= 0 {
+		return nil, code.UserNotExisted
 	}
 	auth := l.svcCtx.Config.Auth
 	token, err := utils.GenerateToken(auth.AccessSecret, auth.AccessExpire, map[string]interface{}{"userId": mobileResp.UserId})

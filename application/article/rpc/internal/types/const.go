@@ -1,9 +1,11 @@
 package types
 
 const (
-	Prefix            = "article"
-	ArticleExpireTime = 3600 * 24 * 3
-	MaxLimit          = 200
+	Prefix                = "article"
+	ArticleExpireTime     = 3600 * 24 * 3
+	MaxLimit              = 200
+	DefaultPageSize       = 20
+	DefaultSortLikeCursor = 1 << 30
 )
 
 const (

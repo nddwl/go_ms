@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"zhihu/pkg/ecode"
+	"zhihu/pkg/interceptor"
 
 	"zhihu/application/follow/internal/config"
 	"zhihu/application/follow/internal/server"
@@ -38,6 +39,8 @@ func main() {
 
 	httpx.SetErrorHandler(ecode.ErrorHandler())
 	httpx.SetOkHandler(ecode.OkHandler())
+
+	s.AddUnaryInterceptors(interceptor.ServerErrorInterceptor())
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()

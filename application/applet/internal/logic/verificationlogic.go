@@ -6,6 +6,7 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"strconv"
 	"time"
+	"zhihu/application/applet/internal/code"
 	"zhihu/application/applet/internal/svc"
 	"zhihu/application/applet/internal/types"
 	"zhihu/application/user/user"
@@ -38,15 +39,15 @@ func (l *VerificationLogic) Verification(req *types.VerificationRequest) (resp *
 		return nil, err
 	}
 	if count > types.VerificationLimitPerDay {
-		return nil, ecode.VerificationMaxLimit
+		return nil, code.VerificationMaxLimit
 	}
-	code := utils.GenerateVerificationCode()
+	c := utils.GenerateVerificationCode()
 	_, err = l.svcCtx.UserRpc.SendSms(l.ctx, &user.SendSmsRequest{Mobile: req.Mobile})
 	if err != nil {
 		logx.Errorf("UserRpc->sendSms mobile: %s error: %v", req.Mobile, err)
 		return nil, err
 	}
-	err = l.saveVerificationCode(req.Mobile, code)
+	err = l.saveVerificationCode(req.Mobile, c)
 	if err != nil {
 		logx.Errorf("saveVerificationCode mobile: %s error: %v", req.Mobile, err)
 		return nil, err
